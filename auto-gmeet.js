@@ -2,7 +2,7 @@
 // @name         Auto Google Meet
 // @namespace    http://github.com/ShingZhanho/auto-gmeet.js
 // @version      0.1
-// @description  try to take over the world!
+// @description  Auto refresh google meet if the meet is not yet started.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/_meet/*
 // @icon         https://www.google.com/s2/favicons?domain=google.com
