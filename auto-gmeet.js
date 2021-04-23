@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
-// @version      0.1.3
+// @version      0.1.3.1
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/_meet/*
@@ -36,89 +36,36 @@
         return;
     }
 
-    // When the meet is ready to join
-    /**
-     * IMPORTANT NOTICE:
-     * THE FOLLOWING CODE UNTIL THE END MARK IS
-     * BASED ON THE CHROME EXTENSION "Google Meet Auto Disable Mic/Cam"
-     * (ID: dgggcpmnponfpgnifbdohajbdkbgjlhd).
-     * THE CODE IS USED HERE FOR INTERNAL AND EDUCATIONAL PURPOSES ONLY.
-     * IF YOU ARE OUTSIDE OF THE CHANG PUI CHUNG MEMORIAL SCHOOL,
-     * YOU SHALL NOT USE THIS CODE AND YOU SHALL USE THE ORIGINAL EXTENSION ONLY.
-     * IF THE AUTHOR OF THE FOLLOWING CODE DOES NOT WANT US TO USE HIS OR HER CODE ANYMORE,
-     * PLEASE SUBMIT AN ISSUE TO INFORM US ON GITHUB FOR DELETING THE CODE.
-     */
-
-    /**
-     * @typedef ButtonProps
-     * @property {string} label
-     * @property {string} key
-     * @property {string} storageName
-     * @property {'left'|'right'} direction
-     * @property {HTMLDivElement} element
-     */
-
-    /** @type {ButtonProps[]} */
-    const buttons = [{
-            label: 'Microphone',
-            storageName: 'disableMic',
-            key: 'd',
-            direction: 'right',
-            element: null,
-        },
-        {
-            label: 'Camera',
-            storageName: 'disableCam',
-            key: 'e',
-            direction: 'left',
-            element: null,
-        },
-    ];
-
-    /** @type {Promise<void>} */
-    const windowLoaded = new Promise(resolve => window.onload = () => resolve());
-
-    /** @type {Promise<void>} */
-    const buttonsLoaded = new Promise(async resolve => {
-        await windowLoaded;
-
-        /** @type {MutationObserver} */
-        const observer = new MutationObserver(() => {
-            if (!buttons.every(button =>
-                    button.element = document.body.querySelector(`div[role="button"][aria-label$=" + ${button.key})" i][data-is-muted]`),
-                )) return;
-
-            observer.disconnect();
-            resolve();
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    });
-
-    Promise.all([buttonsLoaded]).then(async() => {
-
-        buttons.forEach(({ element }) => {
-
-            /** @return {void} */
-            const disable = () => { if (element.dataset.isMuted === 'false') element.click(); };
-
-            disable();
-        });
-
-    });
-
-    /**
-     * THIS IS THE END OF CODE FROM THE CHROME EXTENSION
-     */
-
-    // wait for cam and mic to be disabled
+    // Wait for the page to load if the meet is ready
     await sleep(5000);
 
+
+    // When the meet is ready to join
+    // Get message panel
+    let msgLbl = document.querySelector('div.Jyj1Td');
+
+    // Check whether the meet is really started
+    let micbuttons = window.document.querySelectorAll(".DPvwYc.JnDFsc.dMzo5");
+    if (micbuttons === null) location.reload(); // teacher not yet allowed students to join but meet is opened
+
+    // turn of mic and cam
+    for (let i = 0; i < 2; i++) {
+        micbuttons[i].click();
+        if (msgLbl !== null) msgLbl.textContent = i == 0 ? "Turning off your microphone..." : "Turning off your camera...";
+    }
+
+    // Wait for mic and cam to be disabled
+    if (msgLbl !== null) msgLbl.textContent = "Waiting to join...";
+    await sleep(2000);
+
+    // Get the join meet button
+    let joinbtn = null;
+    while (joinbtn === null) {
+        joinbtn = window.document.querySelector(".NPEfkd");
+    }
+
     // join the meet
-    window.document.querySelector(".NPEfkd").click();
+    joinbtn.click();
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
