@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
-// @version      0.1.2
+// @version      0.1.3
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/_meet/*
@@ -114,6 +114,11 @@
      * THIS IS THE END OF CODE FROM THE CHROME EXTENSION
      */
 
+    // wait for cam and mic to be disabled
+    await sleep(5000);
+
+    // join the meet
+    window.document.querySelector(".NPEfkd").click();
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
