@@ -37,6 +37,82 @@
     }
 
     // When the meet is ready to join
+    /**
+     * IMPORTANT NOTICE:
+     * THE FOLLOWING CODE UNTIL THE END MARK IS
+     * BASED ON THE CHROME EXTENSION "Google Meet Auto Disable Mic/Cam"
+     * (ID: dgggcpmnponfpgnifbdohajbdkbgjlhd).
+     * THE CODE IS USED HERE FOR INTERNAL AND EDUCATIONAL PURPOSES ONLY.
+     * IF YOU ARE OUTSIDE OF THE CHANG PUI CHUNG MEMORIAL SCHOOL,
+     * YOU SHALL NOT USE THIS CODE AND YOU SHALL USE THE ORIGINAL EXTENSION ONLY.
+     * IF THE AUTHOR OF THE FOLLOWING CODE DOES NOT WANT US TO USE HIS OR HER CODE ANYMORE,
+     * PLEASE SUBMIT AN ISSUE TO INFORM US ON GITHUB FOR DELETING THE CODE.
+     */
+
+    /**
+     * @typedef ButtonProps
+     * @property {string} label
+     * @property {string} key
+     * @property {string} storageName
+     * @property {'left'|'right'} direction
+     * @property {HTMLDivElement} element
+     */
+
+    /** @type {ButtonProps[]} */
+    const buttons = [{
+            label: 'Microphone',
+            storageName: 'disableMic',
+            key: 'd',
+            direction: 'right',
+            element: null,
+        },
+        {
+            label: 'Camera',
+            storageName: 'disableCam',
+            key: 'e',
+            direction: 'left',
+            element: null,
+        },
+    ];
+
+    /** @type {Promise<void>} */
+    const windowLoaded = new Promise(resolve => window.onload = () => resolve());
+
+    /** @type {Promise<void>} */
+    const buttonsLoaded = new Promise(async resolve => {
+        await windowLoaded;
+
+        /** @type {MutationObserver} */
+        const observer = new MutationObserver(() => {
+            if (!buttons.every(button =>
+                    button.element = document.body.querySelector(`div[role="button"][aria-label$=" + ${button.key})" i][data-is-muted]`),
+                )) return;
+
+            observer.disconnect();
+            resolve();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+
+    Promise.all([buttonsLoaded]).then(async() => {
+
+        buttons.forEach(({ element }) => {
+
+            /** @return {void} */
+            const disable = () => { if (element.dataset.isMuted === 'false') element.click(); };
+
+            disable();
+        });
+
+    });
+
+    /**
+     * THIS IS THE END OF CODE FROM THE CHROME EXTENSION
+     */
 
 
     function sleep(ms) {
