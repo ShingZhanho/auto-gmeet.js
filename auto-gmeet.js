@@ -16,10 +16,6 @@
 // ==/UserScript==
 
 (async function() {
-    // for version update notifications
-    import { ReleaseNotes, NotificationHelper } from './notification.js';
-
-
     // gets information
     let paras = new URLSearchParams(window.location.search);
     let authuser = paras.get('authuser') === null ? 0 : paras.get('authuser');
