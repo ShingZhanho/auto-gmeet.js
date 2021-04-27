@@ -1,16 +1,25 @@
 // ==UserScript==
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
+// @require      https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/master/notification.js
+// @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/master/version-log.json
 // @version      0.1.3.2
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/_meet/*
 // @icon         https://www.google.com/s2/favicons?domain=meet.google.com
-// @grant        none
+// @grant        window.focus
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_notification
 // @run-at       document-end
 // ==/UserScript==
 
 (async function() {
+    // for version update notifications
+    import { ReleaseNotes, NotificationHelper } from './notification.js';
+
+
     // gets information
     let paras = new URLSearchParams(window.location.search);
     let authuser = paras.get('authuser') === null ? 0 : paras.get('authuser');
@@ -67,6 +76,7 @@
 
     // join the meet
     joinbtn.click();
+    window.focus();
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
