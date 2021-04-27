@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
-// @version      0.1.3.1
+// @version      0.1.3.2
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/_meet/*
-// @icon         https://www.google.com/s2/favicons?domain=google.com
+// @icon         https://www.google.com/s2/favicons?domain=meet.google.com
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -45,10 +45,11 @@
     let msgLbl = document.querySelector('div.Jyj1Td');
 
     // Check whether the meet is really started
-    let micbuttons = window.document.querySelectorAll(".DPvwYc.JnDFsc.dMzo5");
-    if (micbuttons === null) location.reload(); // teacher not yet allowed students to join but meet is opened
+    await sleep(5000);
+    if (window.find("This meet hasn't started yet.", true)) location.reload();
 
     // turn of mic and cam
+    let micbuttons = window.document.querySelectorAll(".DPvwYc.JnDFsc.dMzo5");
     for (let i = 0; i < 2; i++) {
         micbuttons[i].click();
         if (msgLbl !== null) msgLbl.textContent = i == 0 ? "Turning off your microphone..." : "Turning off your camera...";
