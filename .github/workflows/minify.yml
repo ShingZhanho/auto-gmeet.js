@@ -1,0 +1,23 @@
+name: Minify Scripts
+
+on: [ push ]
+      
+jobs:
+  minify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Minify Scripts
+      uses: nizarmah/auto-minify@master
+      with:
+        directory: res
+        output: minified-res
+        js_engine: uglify-js
+
+    - name: Commit results to repo
+      uses: stefanzweifel/git-auto-commit-action@v3.0.0
+      with:
+        commit_message: "actions: Minified resources"
+        branch: production
