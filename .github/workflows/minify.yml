@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Minify Scripts
-      uses: nizarmah/autominify@master
+      uses: nizarmah/auto-minify@master
       with:
         directory: src/toolscripts
         output: mini-toolscripts
