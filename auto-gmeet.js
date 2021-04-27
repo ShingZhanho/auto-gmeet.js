@@ -12,6 +12,7 @@
 // @grant        GM_setValue
 // @grant        GM_notification
 // @grant        GM_info
+// @grant        GM_getResourceURL
 // @run-at       document-end
 // ==/UserScript==
 
@@ -104,11 +105,11 @@ class NotificationHelper {
         );
     }
 
-    getNotesHaveShown() {
+    async getNotesHaveShown() {
         return await GM.getValue('notice-shown-v' + this.noteEntry.versionId, false);
     }
 
-    setNotesHaveShown() {
+    async setNotesHaveShown() {
         await GM.setValue('notice-shown-v' + this.noteEntry.versionId, true);
     }
 }

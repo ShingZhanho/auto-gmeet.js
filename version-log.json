@@ -6,9 +6,8 @@
                 "將會在更新後第一次使用Auto Google Meet時顯示本訊息。"
             ],
             "bugFixes": [],
-            "improvements": [],
-            "removed": [],
-            "importantNotice": []
+            "knownIssues": [],
+            "others": []
         },
         "v0.1.3.3": {
             "description": "此版本包括新增功能",
@@ -16,9 +15,8 @@
                 "進入Google Meet之後會自動跳到Google Meet的頁面。"
             ],
             "bugFixes": [],
-            "improvements": [],
-            "removed": [],
-            "importantNotice": []
+            "knownIssues": [],
+            "others": []
         }
     }
 }
