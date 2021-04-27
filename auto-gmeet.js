@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
-// @resource releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
+// @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
 // @version      0.1.4
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
@@ -11,6 +11,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_notification
+// @grant        GM_info
 // @run-at       document-end
 // ==/UserScript==
 
@@ -113,6 +114,16 @@ class NotificationHelper {
 }
 
 (async function() {
+    // shows release note
+    let releaseJson = undefined;
+    fetch(await GM.getResourceUrl('releaseNoteJson'))
+        .then(response => response.text())
+        .then(data => releaseJson = data);
+    let entries = new ReleaseNotes(releaseJson);
+    let helper = new NotificationHelper(entries.getEntryById('v' + GM.info.version));
+    if (!helper.getNotesHaveShown())
+        helper.showNotification();
+
     // gets information
     let paras = new URLSearchParams(window.location.search);
     let authuser = paras.get('authuser') === null ? 0 : paras.get('authuser');
