@@ -10,7 +10,6 @@
 // @grant        window.focus
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @grant        GM_notification
 // @grant        GM_info
 // @grant        GM_getResourceURL
 // @run-at       document-end
@@ -64,32 +63,32 @@ class NotificationHelper {
         this.noteEntry = noteEntry;
     }
 
-    getNotificationTitle() { return "Auto Google Meet已經更新至v" + this.noteEntry.versionId; }
+    getNotificationTitle() { return "Auto Google Meet已經更新至" + this.noteEntry.versionId + "\n"; }
 
     createMessage() {
         let msg = this.noteEntry.description + "\n======================\n";
-        if (this.noteEntry.hasNewFeatures) {
+        if (this.noteEntry.hasNewFeatures()) {
             msg += "新增功能："
             for (let i = 0; i < this.noteEntry.newFeatures.length; i++) {
                 msg += '\n  ' + (i + 1) + ". " + this.noteEntry.newFeatures[i];
             }
             msg += "\n\n"
         }
-        if (this.noteEntry.hasBugFixes) {
+        if (this.noteEntry.hasBugFixes()) {
             msg += "修正錯誤："
             for (let i = 0; i < this.noteEntry.bugFixes.length; i++) {
                 msg += '\n  ' + (i + 1) + ". " + this.noteEntry.bugFixes[i];
             }
             msg += "\n\n"
         }
-        if (this.noteEntry.hasKnownIssues) {
+        if (this.noteEntry.hasKnownIssues()) {
             msg += "已知問題："
             for (let i = 0; i < this.noteEntry.knownIssues.length; i++) {
                 msg += '\n  ' + (i + 1) + ". " + this.noteEntry.knownIssues[i];
             }
             msg += "\n\n"
         }
-        if (this.noteEntry.hasOthers) {
+        if (this.noteEntry.hasOthers()) {
             msg += "其他改動："
             for (let i = 0; i < this.noteEntry.others.length; i++) {
                 msg += '\n  ' + (i + 1) + ". " + this.noteEntry.others[i];
@@ -99,31 +98,32 @@ class NotificationHelper {
     }
 
     showNotification() {
-        GM.notification(
-            this.createMessage(),
-            this.getNotificationTitle()
-        );
+        window.alert(this.getNotificationTitle() + this.createMessage());
     }
 
     async getNotesHaveShown() {
-        return await GM.getValue('notice-shown-v' + this.noteEntry.versionId, false);
+        return await new Promise((resolve, reject) => {
+            resolve(GM_getValue('notice-shown-v' + this.noteEntry.versionId, false));
+        });
     }
 
     async setNotesHaveShown() {
-        await GM.setValue('notice-shown-v' + this.noteEntry.versionId, true);
+        await GM_setValue('notice-shown-v' + this.noteEntry.versionId, true);
     }
 }
 
 (async function() {
     // shows release note
-    let releaseJson = undefined;
-    fetch(await GM.getResourceUrl('releaseNoteJson'))
+    fetch(await GM_getResourceURL('releaseNoteJson'))
         .then(response => response.text())
-        .then(data => releaseJson = data);
-    let entries = new ReleaseNotes(releaseJson);
-    let helper = new NotificationHelper(entries.getEntryById('v' + GM.info.version));
-    if (!helper.getNotesHaveShown())
-        helper.showNotification();
+        .then(data => {
+        let releaseJson = data;
+        let entries = new ReleaseNotes(releaseJson);
+        let helper = new NotificationHelper(entries.getEntryById('v' + GM_info.script.version));
+        helper.getNotesHaveShown().then((results) => {if (!results) helper.showNotification();});
+        helper.setNotesHaveShown();
+    });
+    
 
     // gets information
     let paras = new URLSearchParams(window.location.search);
