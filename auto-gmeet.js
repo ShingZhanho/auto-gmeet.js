@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
-// @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
-// @version      0.1.3.2
+// @resource releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
+// @version      0.1.4
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/_meet/*
@@ -13,6 +13,104 @@
 // @grant        GM_notification
 // @run-at       document-end
 // ==/UserScript==
+
+class ReleaseNotes {
+    constructor(json) {
+        const jsonObj = JSON.parse(json);
+        this.entries = new Array;
+        Object.keys(jsonObj["changeHistory"]).forEach(
+            element => {
+                this.entries.push(new ReleaseNoteEntry(
+                    element,
+                    jsonObj["changeHistory"][element]["description"],
+                    jsonObj["changeHistory"][element]["newFeatures"],
+                    jsonObj["changeHistory"][element]["bugFixes"],
+                    jsonObj["changeHistory"][element]["knownIssues"],
+                    jsonObj["changeHistory"][element]["others"]
+                ));
+            }
+        )
+    }
+
+    getEntryById(versionId) {
+        for (let i = 0; i < this.entries.length; i++) {
+            if (this.entries[i].versionId === versionId)
+                return this.entries[i];
+        }
+        return undefined;
+    }
+}
+
+class ReleaseNoteEntry {
+    constructor(versionId, description, newFeatures, bugFixes, knownIssues, others) {
+        this.versionId = versionId;
+        this.description = description;
+        this.newFeatures = newFeatures;
+        this.bugFixes = bugFixes;
+        this.knownIssues = knownIssues;
+        this.others = others;
+    }
+
+    hasNewFeatures() { return this.newFeatures.length !== 0; }
+    hasBugFixes() { return this.bugFixes.length !== 0; }
+    hasKnownIssues() { return this.knownIssues.length !== 0; }
+    hasOthers() { return this.others.length !== 0; }
+}
+
+class NotificationHelper {
+    constructor(noteEntry) {
+        this.noteEntry = noteEntry;
+    }
+
+    getNotificationTitle() { return "Auto Google Meet已經更新至v" + this.noteEntry.versionId; }
+
+    createMessage() {
+        let msg = this.noteEntry.description + "\n======================\n";
+        if (this.noteEntry.hasNewFeatures) {
+            msg += "新增功能："
+            for (let i = 0; i < this.noteEntry.newFeatures.length; i++) {
+                msg += '\n  ' + (i + 1) + ". " + this.noteEntry.newFeatures[i];
+            }
+            msg += "\n\n"
+        }
+        if (this.noteEntry.hasBugFixes) {
+            msg += "修正錯誤："
+            for (let i = 0; i < this.noteEntry.bugFixes.length; i++) {
+                msg += '\n  ' + (i + 1) + ". " + this.noteEntry.bugFixes[i];
+            }
+            msg += "\n\n"
+        }
+        if (this.noteEntry.hasKnownIssues) {
+            msg += "已知問題："
+            for (let i = 0; i < this.noteEntry.knownIssues.length; i++) {
+                msg += '\n  ' + (i + 1) + ". " + this.noteEntry.knownIssues[i];
+            }
+            msg += "\n\n"
+        }
+        if (this.noteEntry.hasOthers) {
+            msg += "其他改動："
+            for (let i = 0; i < this.noteEntry.others.length; i++) {
+                msg += '\n  ' + (i + 1) + ". " + this.noteEntry.others[i];
+            }
+        }
+        return msg;
+    }
+
+    showNotification() {
+        GM.notification(
+            this.createMessage(),
+            this.getNotificationTitle()
+        );
+    }
+
+    getNotesHaveShown() {
+        return await GM.getValue('notice-shown-v' + this.noteEntry.versionId, false);
+    }
+
+    setNotesHaveShown() {
+        await GM.setValue('notice-shown-v' + this.noteEntry.versionId, true);
+    }
+}
 
 (async function() {
     // gets information
