@@ -2,7 +2,7 @@
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
 // @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
-// @version      0.1.4
+// @version      0.1.4.1
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/_meet/*
@@ -19,15 +19,15 @@ class ReleaseNotes {
     constructor(json) {
         const jsonObj = JSON.parse(json);
         this.entries = new Array;
-        Object.keys(jsonObj["changeHistory"]).forEach(
+        Object.keys(jsonObj.changeHistory).forEach(
             element => {
                 this.entries.push(new ReleaseNoteEntry(
                     element,
-                    jsonObj["changeHistory"][element]["description"],
-                    jsonObj["changeHistory"][element]["newFeatures"],
-                    jsonObj["changeHistory"][element]["bugFixes"],
-                    jsonObj["changeHistory"][element]["knownIssues"],
-                    jsonObj["changeHistory"][element]["others"]
+                    jsonObj.changeHistory[element].description,
+                    jsonObj.changeHistory[element].newFeatures,
+                    jsonObj.changeHistory[element].bugFixes,
+                    jsonObj.changeHistory[element].knownIssues,
+                    jsonObj.changeHistory[element].others
                 ));
             }
         )
@@ -36,7 +36,9 @@ class ReleaseNotes {
     getEntryById(versionId) {
         for (let i = 0; i < this.entries.length; i++) {
             if (this.entries[i].versionId === versionId)
-                return this.entries[i];
+                {
+                    return this.entries[i];
+                }
         }
         return undefined;
     }
@@ -153,14 +155,12 @@ class NotificationHelper {
     // Wait for the page to load if the meet is ready
     await sleep(5000);
 
-
     // When the meet is ready to join
     // Get message panel
     let msgLbl = document.querySelector('div.Jyj1Td');
 
     // Check whether the meet is really started
-    await sleep(5000);
-    if (window.find("This meet hasn't started yet.", true)) location.reload();
+    if (window.find("This meet hasn't started yet.", true)) {location.reload();}
 
     // turn of mic and cam
     let micbuttons = window.document.querySelectorAll(".DPvwYc.JnDFsc.dMzo5");
@@ -171,7 +171,7 @@ class NotificationHelper {
 
     // Wait for mic and cam to be disabled
     if (msgLbl !== null) msgLbl.textContent = "Waiting to join...";
-    await sleep(2000);
+    await sleep(1000);
 
     // Get the join meet button
     let joinbtn = null;
