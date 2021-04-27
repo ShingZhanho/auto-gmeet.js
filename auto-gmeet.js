@@ -1,8 +1,7 @@
 // ==UserScript==
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
-// @require      https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/master/notification.js
-// @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/master/version-log.json
+// @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
 // @version      0.1.3.2
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
