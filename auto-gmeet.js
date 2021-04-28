@@ -2,10 +2,10 @@
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
 // @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
-// @version      0.1.4.1
+// @version      0.1.4.2
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
-// @match        https://meet.google.com/_meet/*
+// @match        https://meet.google.com/*
 // @icon         https://www.google.com/s2/favicons?domain=meet.google.com
 // @grant        window.focus
 // @grant        GM_getValue

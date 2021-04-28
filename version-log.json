@@ -1,5 +1,19 @@
 {
     "changeHistory": {
+        "v0.1.4.2":{
+            "description": "此版本的Auto Google Meet包含錯誤修正。",
+            "newFeatures": [],
+            "bugFixes": [
+                "修正了Google Meet已經開始時無法自動加入Google Meet的問題。"
+            ],
+            "knownIssues": [
+                "在嘗試加入Google Meet時有一定機率失敗。",
+                "如果Google Meet頁面載入過慢，程式可能無法自動加入Google Meet。"
+            ],
+            "others": [
+                "你正在使用的Auto Google Meet正處於測試階段，可能會出現未知問題。你絕不應完全依賴本程式。"
+            ]
+        },
         "v0.1.4.1":{
             "description": "此版本的Auto Google Meet包含效能改善，使用者未必能感受到顯著變化。",
             "newFeatures": [],
