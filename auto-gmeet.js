@@ -2,7 +2,7 @@
 // @name         Auto Google Meet
 // @namespace    https://github.com/ShingZhanho/auto-gmeet.js
 // @resource     releaseNoteJson https://raw.githubusercontent.com/ShingZhanho/auto-gmeet.js/production/version-log.json
-// @version      0.1.4.2
+// @version      0.1.4.3
 // @description  Automatically refresh google meet.
 // @author       Z. H. Shing
 // @match        https://meet.google.com/*
@@ -160,7 +160,7 @@ class NotificationHelper {
     let msgLbl = document.querySelector('div.Jyj1Td');
 
     // Check whether the meet is really started
-    if (window.find("This meet hasn't started yet.", true)) {location.reload();}
+    if (window.find("This meeting hasn't started yet", true)) {location.reload();}
 
     // turn of mic and cam
     let micbuttons = window.document.querySelectorAll(".DPvwYc.JnDFsc.dMzo5");
